@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Remover Skill - DevConnect{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-5">
+        <div class="card border-0 shadow-sm border-danger border-opacity-25">
+            <div class="card-body p-5 text-center">
+                <div class="mb-4">
+                    <i class="bi bi-exclamation-triangle-fill display-3 text-danger"></i>
+                </div>
+                <h3 class="fw-bold mb-3">Remover Skill</h3>
+                <p class="text-muted mb-2">Remover a skill:</p>
+                <p class="fs-5 fw-semibold mb-1">{{ dev_skill.skill.name }}</p>
+                <p class="text-muted small mb-4">do perfil de <strong>{{ developer.name }}</strong></p>
+
+                <div class="d-flex gap-3 justify-content-center">
+                    <form method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger px-4">
+                            <i class="bi bi-trash me-2"></i>Confirmar Remoção
+                        </button>
+                    </form>
+                    <a href="{% url 'developer_detail' developer.pk %}" class="btn btn-outline-secondary px-4">
+                        <i class="bi bi-x-lg me-2"></i>Cancelar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

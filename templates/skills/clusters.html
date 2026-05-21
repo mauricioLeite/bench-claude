@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Clusters de Skills - DevConnect{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <h2 class="fw-bold mb-1">Clusters de Skills</h2>
+    <p class="text-muted">Skills organizadas por área de atuação e especialidade.</p>
+</div>
+
+<div class="row g-4">
+    {% for cluster in clusters %}
+        <div class="col-md-6 col-xl-4">
+            <div class="card cluster-card border-0 shadow-sm h-100">
+                <div class="card-header bg-{{ cluster.color }} bg-opacity-10 border-0 pt-4 pb-3 px-4">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="cluster-icon bg-{{ cluster.color }} bg-opacity-15 rounded-circle d-flex align-items-center justify-content-center" style="width:46px;height:46px;">
+                                <i class="bi {{ cluster.icon }} text-{{ cluster.color }} fs-4"></i>
+                            </div>
+                            <div>
+                                <h5 class="fw-bold mb-0">{{ cluster.name }}</h5>
+                                <small class="text-muted">{{ cluster.total_skills }} skill{{ cluster.total_skills|pluralize:",s" }}</small>
+                            </div>
+                        </div>
+                        <span class="badge bg-{{ cluster.color }} rounded-pill fs-6 px-3">
+                            {{ cluster.total_devs }} dev{{ cluster.total_devs|pluralize:",s" }}
+                        </span>
+                    </div>
+                </div>
+                <div class="card-body p-4">
+                    {% if cluster.skills %}
+                        <div class="d-flex flex-wrap gap-2">
+                            {% for skill in cluster.skills %}
+                                <div class="skill-cluster-item">
+                                    <span class="badge bg-light text-dark border d-flex align-items-center gap-1 py-2 px-3">
+                                        <span>{{ skill.name }}</span>
+                                        {% if skill.dev_count > 0 %}
+                                            <span class="badge bg-{{ cluster.color }} bg-opacity-75 text-white rounded-pill ms-1" style="font-size:.65rem;">
+                                                {{ skill.dev_count }}
+                                            </span>
+                                        {% endif %}
+                                    </span>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted fst-italic mb-0">
+                            <i class="bi bi-info-circle me-1"></i>Nenhuma skill cadastrada nesta área ainda.
+                        </p>
+                    {% endif %}
+                </div>
+                <div class="card-footer bg-white border-0 pb-3 px-4">
+                    <a href="{% url 'skill_search' %}?category={{ cluster.name|lower }}" class="btn btn-sm btn-outline-{{ cluster.color }}">
+                        <i class="bi bi-search me-1"></i>Buscar nesta área
+                    </a>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

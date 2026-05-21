@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+
+{% block title %}Conexões - DevConnect{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-4">
+    <div>
+        <h2 class="fw-bold mb-1">Conexões</h2>
+        <p class="text-muted mb-0">Gerenciamento de solicitações de contato e mentoria.</p>
+    </div>
+    <a href="{% url 'connection_create' %}" class="btn btn-primary">
+        <i class="bi bi-plus-lg me-2"></i>Nova Solicitação
+    </a>
+</div>
+
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body py-2 px-4">
+        <div class="d-flex gap-2 flex-wrap align-items-center">
+            <span class="text-muted small me-2">Filtrar:</span>
+            <a href="{% url 'connection_list' %}" class="btn btn-sm {% if not current_status %}btn-dark{% else %}btn-outline-secondary{% endif %}">
+                Todas
+            </a>
+            {% for status_val, status_label in status_choices %}
+                <a href="?status={{ status_val }}" class="btn btn-sm {% if current_status == status_val %}btn-dark{% else %}btn-outline-secondary{% endif %}">
+                    {{ status_label }}
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% if connections %}
+    <div class="card border-0 shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Solicitante</th>
+                        <th>Para</th>
+                        <th>Skill</th>
+                        <th>Urgência</th>
+                        <th>Status</th>
+                        <th>Data</th>
+                        <th class="text-center">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for connection in connections %}
+                        <tr>
+                            <td>
+                                <div>
+                                    <strong>{{ connection.requester_name }}</strong>
+                                    <br>
+                                    <small class="text-muted">{{ connection.requester_email }}</small>
+                                </div>
+                            </td>
+                            <td>
+                                <a href="{% url 'developer_detail' connection.receiver.pk %}" class="text-decoration-none">
+                                    {{ connection.receiver.name }}
+                                </a>
+                            </td>
+                            <td>
+                                {% if connection.skill %}
+                                    <span class="badge bg-primary-subtle text-primary">{{ connection.skill.name }}</span>
+                                {% else %}
+                                    <span class="text-muted">—</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if connection.urgency == 'high' %}
+                                    <span class="badge bg-danger-subtle text-danger">
+                                        <i class="bi bi-exclamation-circle me-1"></i>Alta
+                                    </span>
+                                {% elif connection.urgency == 'medium' %}
+                                    <span class="badge bg-warning-subtle text-warning">
+                                        <i class="bi bi-dash-circle me-1"></i>Média
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-success-subtle text-success">
+                                        <i class="bi bi-check-circle me-1"></i>Baixa
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if connection.status == 'pending' %}
+                                    <span class="badge bg-warning-subtle text-warning border border-warning-subtle">Pendente</span>
+                                {% elif connection.status == 'accepted' %}
+                                    <span class="badge bg-success-subtle text-success border border-success-subtle">Aceita</span>
+                                {% elif connection.status == 'rejected' %}
+                                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle">Recusada</span>
+                                {% elif connection.status == 'done' %}
+                                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle">Concluída</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <small class="text-muted">{{ connection.created_at|date:"d/m/Y" }}</small>
+                            </td>
+                            <td class="text-center">
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
+                                        Status
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        {% for status_val, status_label in status_choices %}
+                                            <li>
+                                                <form method="post" action="{% url 'connection_status_update' connection.pk %}">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="status" value="{{ status_val }}">
+                                                    <button type="submit" class="dropdown-item {% if connection.status == status_val %}active{% endif %}">
+                                                        {{ status_label }}
+                                                    </button>
+                                                </form>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                        {% if connection.message %}
+                            <tr class="table-light">
+                                <td colspan="7" class="py-2 px-4">
+                                    <small class="text-muted">
+                                        <i class="bi bi-chat-left-text me-1"></i>
+                                        <em>{{ connection.message }}</em>
+                                    </small>
+                                </td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% else %}
+    <div class="empty-state text-center py-5">
+        <i class="bi bi-envelope display-1 text-muted opacity-25 mb-3 d-block"></i>
+        <h5 class="text-muted">Nenhuma solicitação encontrada</h5>
+        {% if current_status %}
+            <p class="text-muted">Nenhuma solicitação com status "{{ current_status }}". <a href="{% url 'connection_list' %}">Ver todas</a>.</p>
+        {% else %}
+            <p class="text-muted">Ainda não há solicitações de contato ou mentoria.</p>
+        {% endif %}
+    </div>
+{% endif %}
+{% endblock %}

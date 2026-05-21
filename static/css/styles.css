@@ -1,0 +1,280 @@
+/* ============================================
+   DevConnect - Custom Styles
+   ============================================ */
+
+:root {
+  --dc-primary: #0d6efd;
+  --dc-card-radius: 12px;
+  --dc-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+  --dc-shadow-hover: 0 6px 24px rgba(0, 0, 0, 0.12);
+  --dc-transition: all 0.2s ease;
+}
+
+/* ---- Base ---- */
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main.container {
+  flex: 1;
+}
+
+/* ---- Navbar ---- */
+.navbar-brand {
+  font-size: 1.35rem;
+  letter-spacing: -0.02em;
+}
+
+.navbar .btn-primary {
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+/* ---- Cards ---- */
+.card {
+  border-radius: var(--dc-card-radius);
+  transition: var(--dc-transition);
+}
+
+/* ---- Stat Cards ---- */
+.stat-card {
+  border-radius: var(--dc-card-radius);
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--dc-shadow-hover) !important;
+}
+
+.stat-icon {
+  width: 60px;
+  height: 60px;
+}
+
+.stat-number {
+  font-size: 2.2rem;
+  line-height: 1;
+}
+
+/* ---- Quick-action cards ---- */
+.quick-card {
+  border-radius: var(--dc-card-radius);
+  transition: var(--dc-transition);
+}
+
+.quick-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--dc-shadow-hover) !important;
+  background-color: #f8f9ff;
+}
+
+.quick-card i {
+  transition: transform 0.2s ease;
+}
+
+.quick-card:hover i {
+  transform: scale(1.15);
+}
+
+/* ---- Hero Section ---- */
+.hero-section {
+  background: linear-gradient(135deg, #f8f9ff 0%, #e8f4fd 50%, #f0fff4 100%);
+  border-radius: 20px;
+  margin-bottom: 2rem;
+}
+
+/* ---- Developer Cards ---- */
+.developer-card {
+  border-radius: var(--dc-card-radius);
+  transition: var(--dc-transition);
+}
+
+.developer-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--dc-shadow-hover) !important;
+}
+
+/* ---- Skill Badges ---- */
+.skill-badge {
+  font-size: 0.78rem;
+  padding: 4px 9px;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+/* ---- Skill Item (in detail page) ---- */
+.skill-item {
+  transition: var(--dc-transition);
+  background: #fff;
+}
+
+.skill-item:hover {
+  background: #f8f9ff;
+  border-color: #c8d8ff !important;
+}
+
+.skill-stars {
+  font-size: 0.85rem;
+}
+
+/* ---- Level Stars ---- */
+.star-filled {
+  color: #ffc107;
+}
+
+.star-empty {
+  color: #dee2e6;
+}
+
+/* ---- Endorsement items ---- */
+.endorsement-item {
+  border-left: 3px solid #ffc107;
+}
+
+/* ---- Cluster Cards ---- */
+.cluster-card {
+  border-radius: var(--dc-card-radius);
+  transition: var(--dc-transition);
+  overflow: hidden;
+}
+
+.cluster-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--dc-shadow-hover) !important;
+}
+
+.cluster-icon {
+  transition: transform 0.2s ease;
+}
+
+.cluster-card:hover .cluster-icon {
+  transform: scale(1.1);
+}
+
+/* ---- Skill cluster badge ---- */
+.skill-cluster-item .badge {
+  font-size: 0.82rem;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: default;
+}
+
+/* ---- Dashboard ---- */
+.progress {
+  border-radius: 4px;
+  background: #f0f0f0;
+}
+
+.progress-bar {
+  border-radius: 4px;
+  transition: width 0.6s ease;
+}
+
+/* ---- Empty states ---- */
+.empty-state {
+  padding: 3rem 1rem;
+}
+
+/* ---- Tables ---- */
+.table > tbody > tr:last-child > td {
+  border-bottom: none;
+}
+
+/* ---- Forms ---- */
+.form-control,
+.form-select {
+  border-radius: 8px;
+  border-color: #dee2e6;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: #86b7fe;
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.12);
+}
+
+/* ---- Breadcrumb ---- */
+.breadcrumb {
+  font-size: 0.875rem;
+}
+
+/* ---- Footer ---- */
+.footer {
+  margin-top: auto;
+}
+
+/* ---- Alerts ---- */
+.alert {
+  border-radius: 10px;
+  border: none;
+}
+
+/* ---- Badges ---- */
+.badge {
+  font-weight: 500;
+}
+
+/* ---- Buttons ---- */
+.btn {
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.btn-sm {
+  border-radius: 6px;
+}
+
+/* ---- Dropdown ---- */
+.dropdown-menu {
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: var(--dc-shadow-hover);
+}
+
+.dropdown-item {
+  border-radius: 6px;
+  margin: 2px 6px;
+  padding: 6px 12px;
+  width: calc(100% - 12px);
+}
+
+.dropdown-item:hover {
+  background-color: #f0f4ff;
+}
+
+.dropdown-item.active,
+.dropdown-item:active {
+  background-color: var(--dc-primary);
+}
+
+/* ---- Input group ---- */
+.input-group .form-control {
+  border-radius: 0;
+}
+
+.input-group .input-group-text {
+  border-radius: 8px 0 0 8px;
+}
+
+.input-group .btn:last-child {
+  border-radius: 0 8px 8px 0;
+}
+
+.input-group .btn:not(:last-child) {
+  border-radius: 0;
+}
+
+/* ---- Responsive tweaks ---- */
+@media (max-width: 576px) {
+  .hero-section {
+    padding: 2rem 1rem !important;
+  }
+
+  .stat-number {
+    font-size: 1.8rem;
+  }
+}

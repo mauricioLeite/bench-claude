@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}Solicitar Conexão - DevConnect{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <div class="mb-4">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'connection_list' %}">Conexões</a></li>
+                    <li class="breadcrumb-item active">Nova Solicitação</li>
+                </ol>
+            </nav>
+            <h2 class="fw-bold mb-1">Solicitar Contato / Mentoria</h2>
+            <p class="text-muted">Envie uma solicitação de ajuda ou mentoria a um desenvolvedor da rede.</p>
+        </div>
+
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+                <form method="post" novalidate>
+                    {% csrf_token %}
+
+                    <h6 class="fw-semibold text-muted mb-3 text-uppercase" style="font-size:.8rem; letter-spacing:.05em;">Seus dados</h6>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.requester_name.id_for_label }}" class="form-label fw-semibold">{{ form.requester_name.label }}</label>
+                            {{ form.requester_name }}
+                            {% if form.requester_name.errors %}
+                                <div class="invalid-feedback d-block">{{ form.requester_name.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.requester_email.id_for_label }}" class="form-label fw-semibold">{{ form.requester_email.label }}</label>
+                            {{ form.requester_email }}
+                            {% if form.requester_email.errors %}
+                                <div class="invalid-feedback d-block">{{ form.requester_email.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <hr class="my-3">
+                    <h6 class="fw-semibold text-muted mb-3 text-uppercase" style="font-size:.8rem; letter-spacing:.05em;">Detalhes da Solicitação</h6>
+
+                    <div class="mb-3">
+                        <label for="{{ form.receiver.id_for_label }}" class="form-label fw-semibold">{{ form.receiver.label }}</label>
+                        {{ form.receiver }}
+                        {% if form.receiver.errors %}
+                            <div class="invalid-feedback d-block">{{ form.receiver.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.skill.id_for_label }}" class="form-label fw-semibold">{{ form.skill.label }} <span class="text-muted fw-normal">(opcional)</span></label>
+                        {{ form.skill }}
+                        {% if form.skill.errors %}
+                            <div class="invalid-feedback d-block">{{ form.skill.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.urgency.id_for_label }}" class="form-label fw-semibold">{{ form.urgency.label }}</label>
+                        {{ form.urgency }}
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="{{ form.message.id_for_label }}" class="form-label fw-semibold">{{ form.message.label }}</label>
+                        {{ form.message }}
+                        {% if form.message.errors %}
+                            <div class="invalid-feedback d-block">{{ form.message.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary px-4">
+                            <i class="bi bi-send me-2"></i>Enviar Solicitação
+                        </button>
+                        <a href="{% url 'developer_list' %}" class="btn btn-outline-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

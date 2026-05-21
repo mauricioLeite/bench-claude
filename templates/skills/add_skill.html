@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}Adicionar Skill - {{ developer.name }} - DevConnect{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="mb-4">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'developer_list' %}">Desenvolvedores</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'developer_detail' developer.pk %}">{{ developer.name }}</a></li>
+                    <li class="breadcrumb-item active">Adicionar Skill</li>
+                </ol>
+            </nav>
+            <h2 class="fw-bold mb-1">Adicionar Skill</h2>
+            <p class="text-muted">Adicione uma skill ao perfil de <strong>{{ developer.name }}</strong>.</p>
+        </div>
+
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+                <form method="post" novalidate>
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label for="{{ form.skill.id_for_label }}" class="form-label fw-semibold">{{ form.skill.label }}</label>
+                        {{ form.skill }}
+                        {% if form.skill.errors %}
+                            <div class="invalid-feedback d-block">{{ form.skill.errors.0 }}</div>
+                        {% endif %}
+                        <div class="form-text">
+                            Skill não encontrada? <a href="{% url 'skill_create' %}">Crie uma nova skill</a>.
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.level.id_for_label }}" class="form-label fw-semibold">{{ form.level.label }}</label>
+                        {{ form.level }}
+                        {% if form.level.errors %}
+                            <div class="invalid-feedback d-block">{{ form.level.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.years_of_experience.id_for_label }}" class="form-label fw-semibold">{{ form.years_of_experience.label }}</label>
+                        {{ form.years_of_experience }}
+                        {% if form.years_of_experience.errors %}
+                            <div class="invalid-feedback d-block">{{ form.years_of_experience.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.description.id_for_label }}" class="form-label fw-semibold">{{ form.description.label }}</label>
+                        {{ form.description }}
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-check">
+                            {{ form.is_learning }}
+                            <label class="form-check-label" for="{{ form.is_learning.id_for_label }}">
+                                {{ form.is_learning.label }}
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="form-check">
+                            {{ form.is_available_to_help }}
+                            <label class="form-check-label" for="{{ form.is_available_to_help.id_for_label }}">
+                                {{ form.is_available_to_help.label }}
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-success px-4">
+                            <i class="bi bi-plus-lg me-2"></i>Adicionar Skill
+                        </button>
+                        <a href="{% url 'developer_detail' developer.pk %}" class="btn btn-outline-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

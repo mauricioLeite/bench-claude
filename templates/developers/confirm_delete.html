@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Remover {{ developer.name }} - DevConnect{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="mb-4">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'developer_list' %}">Desenvolvedores</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'developer_detail' developer.pk %}">{{ developer.name }}</a></li>
+                    <li class="breadcrumb-item active">Remover</li>
+                </ol>
+            </nav>
+        </div>
+
+        <div class="card border-0 shadow-sm border-danger border-opacity-25">
+            <div class="card-body p-5 text-center">
+                <div class="mb-4">
+                    <i class="bi bi-exclamation-triangle-fill display-3 text-danger"></i>
+                </div>
+                <h3 class="fw-bold mb-3">Confirmar Remoção</h3>
+                <p class="text-muted mb-2">
+                    Você está prestes a remover permanentemente o desenvolvedor:
+                </p>
+                <p class="fs-5 fw-semibold mb-1">{{ developer.name }}</p>
+                {% if developer.email %}
+                    <p class="text-muted small mb-4">{{ developer.email }}</p>
+                {% endif %}
+                <div class="alert alert-warning text-start">
+                    <i class="bi bi-info-circle me-2"></i>
+                    <strong>Atenção:</strong> Esta ação é irreversível. Todas as skills e conexões associadas também serão removidas.
+                </div>
+                <div class="d-flex gap-3 justify-content-center mt-4">
+                    <form method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger px-4">
+                            <i class="bi bi-trash me-2"></i>Sim, Remover
+                        </button>
+                    </form>
+                    <a href="{% url 'developer_detail' developer.pk %}" class="btn btn-outline-secondary px-4">
+                        <i class="bi bi-x-lg me-2"></i>Cancelar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

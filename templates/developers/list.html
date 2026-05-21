@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block title %}Desenvolvedores - DevConnect{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-4">
+    <div>
+        <h2 class="fw-bold mb-1">Desenvolvedores</h2>
+        <p class="text-muted mb-0">{{ developers|length }} desenvolvedor{{ developers|length|pluralize:",es" }} encontrado{{ developers|length|pluralize:",s" }}</p>
+    </div>
+    <a href="{% url 'developer_create' %}" class="btn btn-primary">
+        <i class="bi bi-plus-lg me-2"></i>Novo Desenvolvedor
+    </a>
+</div>
+
+<form method="get" class="mb-4">
+    <div class="input-group shadow-sm">
+        <span class="input-group-text bg-white border-end-0">
+            <i class="bi bi-search text-muted"></i>
+        </span>
+        <input
+            type="text"
+            name="q"
+            class="form-control border-start-0 ps-0"
+            placeholder="Buscar por nome, time ou cargo..."
+            value="{{ query }}"
+        >
+        <button type="submit" class="btn btn-primary px-4">Buscar</button>
+        {% if query %}
+            <a href="{% url 'developer_list' %}" class="btn btn-outline-secondary">
+                <i class="bi bi-x-lg"></i>
+            </a>
+        {% endif %}
+    </div>
+</form>
+
+{% if developers %}
+    <div class="row g-4">
+        {% for developer in developers %}
+            <div class="col-sm-6 col-lg-4">
+                <div class="card developer-card border-0 shadow-sm h-100">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-start mb-3">
+                            <div class="avatar-circle me-3 flex-shrink-0">
+                                {% if developer.avatar_url %}
+                                    <img src="{{ developer.avatar_url }}" alt="{{ developer.name }}" class="rounded-circle" width="48" height="48" style="object-fit:cover;">
+                                {% else %}
+                                    <div class="avatar-placeholder rounded-circle d-flex align-items-center justify-content-center bg-primary text-white fw-bold" style="width:48px;height:48px;font-size:1.1rem;">
+                                        {{ developer.name|first|upper }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="flex-grow-1 min-w-0">
+                                <h6 class="fw-bold mb-0 text-truncate">{{ developer.name }}</h6>
+                                {% if developer.job_title %}
+                                    <small class="text-muted">{{ developer.job_title }}</small>
+                                {% endif %}
+                                {% if developer.team %}
+                                    <div>
+                                        <span class="badge bg-secondary bg-opacity-15 text-secondary small">
+                                            <i class="bi bi-people me-1"></i>{{ developer.team }}
+                                        </span>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="ms-2 flex-shrink-0">
+                                {% if developer.availability %}
+                                    <span class="badge bg-success-subtle text-success">
+                                        <i class="bi bi-circle-fill me-1" style="font-size:.5rem;"></i>Disponível
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-secondary-subtle text-secondary">
+                                        <i class="bi bi-circle me-1" style="font-size:.5rem;"></i>Ocupado
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        {% with top_skills=developer.developer_skills.all %}
+                            {% if top_skills %}
+                                <div class="mb-3">
+                                    {% for ds in top_skills|slice:":3" %}
+                                        <span class="badge skill-badge me-1 mb-1 {% if ds.skill.type == 'hard' %}bg-primary-subtle text-primary{% else %}bg-success-subtle text-success{% endif %}">
+                                            {{ ds.skill.name }}
+                                        </span>
+                                    {% endfor %}
+                                    {% if top_skills|length > 3 %}
+                                        <span class="badge bg-light text-muted">+{{ top_skills|length|add:"-3" }}</span>
+                                    {% endif %}
+                                </div>
+                            {% else %}
+                                <p class="text-muted small mb-3 fst-italic">Nenhuma skill adicionada</p>
+                            {% endif %}
+                        {% endwith %}
+
+                        <div class="d-flex gap-2 mt-auto">
+                            <a href="{% url 'developer_detail' developer.pk %}" class="btn btn-sm btn-outline-primary flex-fill">
+                                <i class="bi bi-eye me-1"></i>Ver Perfil
+                            </a>
+                            <a href="{% url 'developer_edit' developer.pk %}" class="btn btn-sm btn-outline-secondary">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a href="{% url 'developer_delete' developer.pk %}" class="btn btn-sm btn-outline-danger">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="empty-state text-center py-5">
+        <i class="bi bi-people display-1 text-muted opacity-25 mb-3 d-block"></i>
+        <h5 class="text-muted">Nenhum desenvolvedor encontrado</h5>
+        {% if query %}
+            <p class="text-muted">Tente buscar com outros termos ou <a href="{% url 'developer_list' %}">veja todos</a>.</p>
+        {% else %}
+            <p class="text-muted">Comece adicionando o primeiro desenvolvedor à rede.</p>
+            <a href="{% url 'developer_create' %}" class="btn btn-primary mt-2">
+                <i class="bi bi-plus-lg me-2"></i>Adicionar Desenvolvedor
+            </a>
+        {% endif %}
+    </div>
+{% endif %}
+{% endblock %}

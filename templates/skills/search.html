@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% block title %}Buscar por Skill - DevConnect{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <h2 class="fw-bold mb-1">Busca por Skill</h2>
+    <p class="text-muted">Encontre desenvolvedores que dominam uma tecnologia ou competência específica.</p>
+</div>
+
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body p-4">
+        <form method="get" novalidate>
+            <div class="row g-3">
+                <div class="col-md-6 col-lg-3">
+                    <label class="form-label fw-semibold">{{ form.skill.label }}</label>
+                    {{ form.skill }}
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <label class="form-label fw-semibold">{{ form.category.label }}</label>
+                    {{ form.category }}
+                </div>
+                <div class="col-md-6 col-lg-2">
+                    <label class="form-label fw-semibold">{{ form.type.label }}</label>
+                    {{ form.type }}
+                </div>
+                <div class="col-md-6 col-lg-2">
+                    <label class="form-label fw-semibold">{{ form.min_level.label }}</label>
+                    {{ form.min_level }}
+                </div>
+                <div class="col-md-6 col-lg-2">
+                    <label class="form-label fw-semibold">{{ form.team.label }}</label>
+                    {{ form.team }}
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-auto">
+                    <div class="form-check form-check-inline">
+                        {{ form.availability }}
+                        <label class="form-check-label" for="{{ form.availability.id_for_label }}">
+                            {{ form.availability.label }}
+                        </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        {{ form.is_learning }}
+                        <label class="form-check-label" for="{{ form.is_learning.id_for_label }}">
+                            {{ form.is_learning.label }}
+                        </label>
+                    </div>
+                </div>
+                <div class="col text-end">
+                    <button type="submit" class="btn btn-primary px-4">
+                        <i class="bi bi-search me-2"></i>Buscar
+                    </button>
+                    <a href="{% url 'skill_search' %}" class="btn btn-outline-secondary ms-2">
+                        <i class="bi bi-x-lg me-1"></i>Limpar
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% if searched %}
+    {% if developers %}
+        <div class="d-flex align-items-center justify-content-between mb-3">
+            <h5 class="fw-semibold mb-0">
+                {{ developers|length }} resultado{{ developers|length|pluralize:",s" }} encontrado{{ developers|length|pluralize:",s" }}
+            </h5>
+        </div>
+        <div class="row g-4">
+            {% for developer in developers %}
+                <div class="col-sm-6 col-lg-4">
+                    <div class="card developer-card border-0 shadow-sm h-100">
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-start mb-3">
+                                <div class="me-3 flex-shrink-0">
+                                    {% if developer.avatar_url %}
+                                        <img src="{{ developer.avatar_url }}" alt="{{ developer.name }}" class="rounded-circle" width="44" height="44" style="object-fit:cover;">
+                                    {% else %}
+                                        <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-primary text-white fw-bold" style="width:44px;height:44px;">
+                                            {{ developer.name|first|upper }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="fw-bold mb-0">{{ developer.name }}</h6>
+                                    {% if developer.job_title %}
+                                        <small class="text-muted">{{ developer.job_title }}</small>
+                                    {% endif %}
+                                    {% if developer.team %}
+                                        <div>
+                                            <span class="badge bg-secondary bg-opacity-15 text-secondary small">{{ developer.team }}</span>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="ms-1 flex-shrink-0">
+                                    {% if developer.availability %}
+                                        <span class="badge bg-success-subtle text-success small">Disponível</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                {% for ds in developer.developer_skills.all|slice:":5" %}
+                                    <span class="badge skill-badge me-1 mb-1 {% if ds.skill.type == 'hard' %}bg-primary-subtle text-primary{% else %}bg-success-subtle text-success{% endif %}">
+                                        {{ ds.skill.name }}
+                                    </span>
+                                {% endfor %}
+                            </div>
+                            <a href="{% url 'developer_detail' developer.pk %}" class="btn btn-sm btn-outline-primary w-100">
+                                <i class="bi bi-eye me-1"></i>Ver Perfil
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state text-center py-5">
+            <i class="bi bi-search display-1 text-muted opacity-25 mb-3 d-block"></i>
+            <h5 class="text-muted">Nenhum desenvolvedor encontrado</h5>
+            <p class="text-muted">Tente ajustar os filtros de busca.</p>
+        </div>
+    {% endif %}
+{% else %}
+    <div class="empty-state text-center py-5">
+        <i class="bi bi-funnel display-1 text-muted opacity-25 mb-3 d-block"></i>
+        <h5 class="text-muted">Use os filtros acima para buscar</h5>
+        <p class="text-muted">Selecione uma skill, categoria ou outros critérios e clique em Buscar.</p>
+    </div>
+{% endif %}
+{% endblock %}

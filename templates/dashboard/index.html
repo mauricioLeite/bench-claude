@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - DevConnect{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <h2 class="fw-bold mb-1">Dashboard</h2>
+    <p class="text-muted">Indicadores e métricas da rede de desenvolvedores.</p>
+</div>
+
+<div class="row g-4 mb-5">
+    <div class="col-sm-6 col-lg-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body d-flex align-items-center gap-3 p-4">
+                <div class="bg-primary bg-opacity-10 rounded-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width:54px;height:54px;">
+                    <i class="bi bi-people-fill text-primary fs-3"></i>
+                </div>
+                <div>
+                    <h2 class="fw-bold mb-0">{{ total_devs }}</h2>
+                    <p class="text-muted mb-0 small">Total de Desenvolvedores</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body d-flex align-items-center gap-3 p-4">
+                <div class="bg-success bg-opacity-10 rounded-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width:54px;height:54px;">
+                    <i class="bi bi-lightbulb-fill text-success fs-3"></i>
+                </div>
+                <div>
+                    <h2 class="fw-bold mb-0">{{ total_skills }}</h2>
+                    <p class="text-muted mb-0 small">Skills Mapeadas</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body d-flex align-items-center gap-3 p-4">
+                <div class="bg-warning bg-opacity-10 rounded-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width:54px;height:54px;">
+                    <i class="bi bi-hand-thumbs-up-fill text-warning fs-3"></i>
+                </div>
+                <div>
+                    <h2 class="fw-bold mb-0">{{ available_count }}</h2>
+                    <p class="text-muted mb-0 small">Disponíveis para Ajudar</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body d-flex align-items-center gap-3 p-4">
+                <div class="bg-info bg-opacity-10 rounded-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width:54px;height:54px;">
+                    <i class="bi bi-book-fill text-info fs-3"></i>
+                </div>
+                <div>
+                    <h2 class="fw-bold mb-0">{{ learning_count }}</h2>
+                    <p class="text-muted mb-0 small">Aprendendo Ativamente</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-white border-0 pt-4 pb-0 px-4">
+                <h5 class="fw-bold mb-0">
+                    <i class="bi bi-bar-chart-fill me-2 text-primary"></i>Top Skills
+                </h5>
+                <p class="text-muted small mb-0">Skills mais presentes na equipe</p>
+            </div>
+            <div class="card-body p-4">
+                {% if top_skills %}
+                    {% for item in top_skills %}
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="fw-semibold small">{{ item.skill.name }}</span>
+                                <span class="badge bg-primary-subtle text-primary">{{ item.skill.dev_count }} dev{{ item.skill.dev_count|pluralize:",s" }}</span>
+                            </div>
+                            <div class="progress" style="height:8px; border-radius:4px;">
+                                <div class="progress-bar bg-primary" style="width: {{ item.pct }}%;"></div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted fst-italic">Nenhum dado disponível ainda.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-white border-0 pt-4 pb-0 px-4">
+                <h5 class="fw-bold mb-0">
+                    <i class="bi bi-stars me-2 text-warning"></i>Distribuição por Nível
+                </h5>
+                <p class="text-muted small mb-0">Quantos registros por nível de proficiência</p>
+            </div>
+            <div class="card-body p-4">
+                {% for item in level_distribution %}
+                    <div class="d-flex align-items-center mb-3 gap-3">
+                        <div class="flex-shrink-0" style="width:28px; text-align:right;">
+                            <span class="fw-bold text-muted">{{ item.level }}</span>
+                        </div>
+                        <div class="skill-stars flex-shrink-0">
+                            {% for i in "12345" %}
+                                {% if forloop.counter <= item.level %}
+                                    <i class="bi bi-star-fill text-warning" style="font-size:.7rem;"></i>
+                                {% else %}
+                                    <i class="bi bi-star text-muted opacity-25" style="font-size:.7rem;"></i>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="progress" style="height:8px; border-radius:4px;">
+                                {% if item.count > 0 %}
+                                    <div class="progress-bar bg-warning" style="width: {% widthratio item.count total_devs|default:1 100 %}%;"></div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="flex-shrink-0 text-end" style="width:40px;">
+                            <span class="small text-muted">{{ item.count }}</span>
+                        </div>
+                    </div>
+                {% endfor %}
+                <div class="mt-3 pt-3 border-top">
+                    {% for item in level_distribution %}
+                        <div class="d-flex gap-2 mb-1">
+                            <span class="text-muted small" style="width:12px;">{{ item.level }}</span>
+                            <span class="text-muted small">{{ item.label }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-white border-0 pt-4 pb-0 px-4">
+        <h5 class="fw-bold mb-0">
+            <i class="bi bi-exclamation-triangle me-2 text-danger"></i>Skills com Poucos Especialistas
+        </h5>
+        <p class="text-muted small mb-0">Skills com menos de 2 desenvolvedores em nível 4 ou 5 (oportunidades de mentoria)</p>
+    </div>
+    <div class="card-body p-4">
+        {% if few_experts %}
+            <div class="row g-3">
+                {% for skill in few_experts %}
+                    <div class="col-sm-6 col-md-4 col-lg-3">
+                        <div class="p-3 border rounded-3 text-center">
+                            <span class="fw-semibold d-block mb-1">{{ skill.name }}</span>
+                            <span class="badge bg-light text-muted border">{{ skill.get_category_display }}</span>
+                            <div class="mt-2">
+                                {% if skill.expert_count == 0 %}
+                                    <span class="badge bg-danger-subtle text-danger">
+                                        <i class="bi bi-person-x me-1"></i>Sem especialistas
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-warning-subtle text-warning">
+                                        <i class="bi bi-person me-1"></i>{{ skill.expert_count }} especialista{{ skill.expert_count|pluralize:",s" }}
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="text-center py-4">
+                <i class="bi bi-check-circle-fill text-success fs-1 mb-3 d-block"></i>
+                <p class="text-muted mb-0">Ótimo! Todas as skills têm especialistas suficientes.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
